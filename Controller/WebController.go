@@ -19,7 +19,7 @@ func Ping(c *gin.Context) {
 
 // 调用go服务查询
 func GetSteamItemInfoByGoAo(c *gin.Context) {
-	f, _, err := proto.GetDockerGoProjectAoClient()
+	f, client, err := proto.GetDockerGoProjectAoClient()
 	defer f.CloseClient()
 	if err != nil {
 		fmt.Printf("GetSteamItemInfoByGoAo::GetDockerGoProjectAoClient err:%v", err)
@@ -27,18 +27,17 @@ func GetSteamItemInfoByGoAo(c *gin.Context) {
 		return
 	}
 
-	//req := &proto.GetItemInfoReq{
-	//	ReqHeader: &proto.RequestHeader{},
-	//	ItemId:    1,
-	//}
-	//
-	//resp, err := client.GetItemInfo(context.TODO(), req)
-	//if err != nil {
-	//	wclg.RenderErrorJson(20002, "服务异常", c)
-	//	return
-	//}
+	req := &proto.GetItemInfoReq{
+		ReqHeader: &proto.RequestHeader{},
+		ItemId:    1,
+	}
 
-	resp := new(proto.GetItemInfoResp)
+	resp, err := client.GetItemInfo(context.TODO(), req)
+	if err != nil {
+		wclg.RenderErrorJson(20002, "服务异常", c)
+		return
+	}
+
 	//返回结果
 	wclg.RenderDataJson(0, "", wclg.StructToMapViaReflect(resp), c)
 	return
