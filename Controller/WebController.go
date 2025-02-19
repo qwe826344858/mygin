@@ -19,6 +19,15 @@ func Ping(c *gin.Context) {
 
 // 调用go服务查询
 func GetSteamItemInfoByGoAo(c *gin.Context) {
+	//解析入参:
+	param := wclg.NewGinCtxParam(c)
+	fmt.Printf("param:%v", param)
+	litemId := param.GetIntValue("item_id", 0)
+	if litemId < 1 {
+		wclg.RenderErrorJson(30001, "请输入商品id", c)
+		return
+	}
+
 	f, client, err := proto.GetDockerGoProjectAoClient()
 	defer f.CloseClient()
 	if err != nil {
@@ -29,7 +38,7 @@ func GetSteamItemInfoByGoAo(c *gin.Context) {
 
 	req := &proto.GetItemInfoReq{
 		ReqHeader: &proto.RequestHeader{},
-		ItemId:    1,
+		ItemId:    int64(litemId),
 	}
 
 	resp, err := client.GetItemInfo(context.TODO(), req)
@@ -45,6 +54,15 @@ func GetSteamItemInfoByGoAo(c *gin.Context) {
 
 // 调用python服务查询
 func GetSteamItemInfoByPythonAo(c *gin.Context) {
+	//解析入参:
+	param := wclg.NewGinCtxParam(c)
+	fmt.Printf("param:%v", param)
+	litemId := param.GetIntValue("item_id", 0)
+	if litemId < 1 {
+		wclg.RenderErrorJson(30001, "请输入商品id", c)
+		return
+	}
+
 	f, dockerPyClient, err := extProto.GetDockerProjectAoClient()
 	defer f.CloseClient()
 	if err != nil {
@@ -55,7 +73,7 @@ func GetSteamItemInfoByPythonAo(c *gin.Context) {
 
 	req := &extProto.GetItemInfoReq{
 		ReqHeader: &extProto.RequestHeader{},
-		ItemId:    2,
+		ItemId:    int64(litemId),
 	}
 	resp, err := dockerPyClient.GetItemInfo(context.TODO(), req)
 	if err != nil {

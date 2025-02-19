@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"reflect"
+	"strconv"
 	"strings"
 )
 
@@ -35,6 +36,7 @@ func RenderErrorJson(errcode int, errmsg string, c *gin.Context) {
 	return
 }
 
+// 结构体转义回参
 func StructToMapViaReflect(obj interface{}) map[string]interface{} {
 	v := reflect.ValueOf(obj)
 	if v.Kind() == reflect.Ptr {
@@ -66,4 +68,42 @@ func StructToMapViaReflect(obj interface{}) map[string]interface{} {
 		}
 	}
 	return result
+}
+
+// Gin Request 参数解析
+type WebGinContextParam struct {
+	reqCtx *gin.Context
+	init   bool
+}
+
+func NewGinCtxParam(c *gin.Context) *WebGinContextParam {
+	return &WebGinContextParam{
+		reqCtx: c,
+		init:   true,
+	}
+}
+
+func (wctx *WebGinContextParam) GetStringValue(name string, strVal string) string {
+	if wctx.init != true {
+		return strVal
+	}
+
+	tmpValue := wctx.reqCtx.DefaultQuery(name, strVal)
+
+	return tmpValue
+}
+
+func (wctx *WebGinContextParam) GetIntValue(name string, nVal int32) int32 {
+	var tmpValue string
+	var ok bool
+	if tmpValue, ok = wctx.reqCtx.GetQuery(name); !ok {
+		return nVal
+	}
+
+	iRetVal, err := strconv.Atoi(tmpValue)
+	if err != nil {
+		return nVal
+	}
+
+	return int32(iRetVal)
 }
