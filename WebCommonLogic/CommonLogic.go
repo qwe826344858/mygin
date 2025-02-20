@@ -107,3 +107,9 @@ func (wctx *WebGinContextParam) GetIntValue(name string, nVal int32) int32 {
 
 	return int32(iRetVal)
 }
+
+//  结构体倒叙排序
+//		sort.Slice(input, func(i, j int) bool {
+//			return input[i][key] > input[j][key] // >号实现倒序
+//		})
+//	}
