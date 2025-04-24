@@ -7,12 +7,14 @@ import (
 	extProto "github.com/qwe826344858/dockerGoProject/ExternalProto"
 	proto "github.com/qwe826344858/dockerGoProject/proto"
 	wclg "github.com/qwe826344858/mygin/WebCommonLogic"
+	"time"
 )
 
 func Ping(c *gin.Context) {
 	Data := map[string]interface{}{
 		"message": "pong",
 	}
+	fmt.Printf("有人Ping! now:%v \n", time.Now())
 	wclg.RenderDataJson(0, "", Data, c)
 	return
 }
@@ -83,5 +85,13 @@ func GetSteamItemInfoByPythonAo(c *gin.Context) {
 
 	// 返回结果
 	wclg.RenderDataJson(0, "", wclg.StructToMapViaReflect(resp), c)
+	return
+}
+
+func PanicTest(c *gin.Context) {
+	var v interface{}
+	fmt.Printf("我要panic了! now:%v \n", time.Now())
+	v = "panic test"
+	panic(v)
 	return
 }

@@ -9,5 +9,5 @@ func Register(r *gin.Engine) {
 	r.GET("/ping", Controller.Ping)
 	r.GET("/getsteamiteminfogo", Controller.GetSteamItemInfoByGoAo)
 	r.GET("/getsteamiteminfopy", Controller.GetSteamItemInfoByPythonAo)
-
+	r.GET("/panictest", Controller.PanicTest)
 }
