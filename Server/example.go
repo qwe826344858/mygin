@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/qwe826344858/mygin/Route"
 	"log"
+	"net/http"
 )
 
 func main() {
@@ -25,6 +26,12 @@ func main() {
 func MiddleWare() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		fmt.Printf("中间件启动\n")
+		sessionId, _ := c.Cookie("sessionId")
+		if sessionId == "" {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"error": "sessionId 为空或未找到",
+			})
+		}
 		c.Next()
 		fmt.Printf("中间件结束\n")
 	}
