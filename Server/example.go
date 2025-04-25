@@ -14,7 +14,7 @@ func main() {
 	//r.Use(gin.Recovery()) // 中间件panic捕获
 	//r.Use(gin.Logger()) //  gin log 日志相关
 
-	r.Use(MiddleWare()) // 自定义中间件
+	// r.Use(MiddleWare()) // 自定义中间件
 
 	Route.Register(r)
 	if err := r.Run(); err != nil { // 监听并在 0.0.0.0:8080 上启动服务
